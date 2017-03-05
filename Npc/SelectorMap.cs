@@ -9,6 +9,7 @@ namespace Npc
         private readonly Dictionary<TKey, TValue> _map = new Dictionary<TKey, TValue>();
         private readonly Dictionary<TKey, TValueCore> _collectionSource = new Dictionary<TKey, TValueCore>();
         public ICollection<TValueCore> CoreCollection => _collectionSource.Values;
+        public ICollection<TKey> Keys => _collectionSource.Keys;
 
         public SelectorMap(Func<TValue, TValueCore> core)
         {
@@ -28,5 +29,7 @@ namespace Npc
             _collectionSource.Add(key, _core(value));
             return value;
         }
+
+        public TValue this[TKey key] => _map[key];
     }
 }
