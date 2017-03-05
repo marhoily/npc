@@ -10,7 +10,7 @@ namespace Npc
         private DependencyObject _source;
         private readonly DependencyProperty _declaration;
         private readonly DependencyPropertyDescriptor _descriptor;
-        private readonly List<Action<object>> _changed = new List<Action<object>>();
+        private readonly List<Action<object, object>> _changed = new List<Action<object, object>>();
 
         public DependencyPropertyLink(DependencyProperty declaration)
         {
@@ -22,7 +22,7 @@ namespace Npc
         public object Value { get; private set; }
         public Type FormalType => _declaration.PropertyType;
 
-        public void Subscribe(Action<object> handler) => _changed.Add(handler);
+        public void Subscribe(Action<object, object> handler) => _changed.Add(handler);
 
         public void ChangeSource(object value)
         {
@@ -49,8 +49,9 @@ namespace Npc
 
             if (Equals(Value, value))
                 return;
+            var old = Value;
             Value = value;
-            _changed.ForEach(handle => handle(value));
+            _changed.ForEach(handle => handle(old, value));
         }
         private void Unsubscribe()
         {

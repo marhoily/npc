@@ -6,7 +6,7 @@ namespace Npc
     {
         object Value { get; }
         Type FormalType { get; }
-        void Subscribe(Action<object> changed);
+        void Subscribe(Action<object, object> changed);
         void ChangeSource(object value);
     }
 }

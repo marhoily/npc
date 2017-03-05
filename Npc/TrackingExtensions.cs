@@ -41,7 +41,7 @@ namespace Npc
         {
             var resourceContainer = (ResourceContainer)result;
             resourceContainer.Resources.Add(source.Dispose);
-            source.Subscribe(result.ChangeSource);
+            source.Subscribe((_, value) => result.ChangeSource(value));
             result.ChangeSource(source.Value);
             return result;
         }

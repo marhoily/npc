@@ -9,7 +9,7 @@ namespace Npc
     {
         private INotifyPropertyChanged _source;
         private readonly string _propertyName;
-        private readonly List<Action<object>> _changed = new List<Action<object>>();
+        private readonly List<Action<object, object>> _changed = new List<Action<object, object>>();
         public Type FormalType { get; }
         public override string ToString() => $"Npc({_propertyName})";
 
@@ -21,7 +21,7 @@ namespace Npc
         }
 
         public object Value { get; private set; }
-        public void Subscribe(Action<object> handler) => _changed.Add(handler);
+        public void Subscribe(Action<object, object> handler) => _changed.Add(handler);
         public void ChangeSource(object value)
         {
             if (ReferenceEquals(_source, value))
@@ -52,8 +52,9 @@ namespace Npc
 
             if (Equals(Value, value))
                 return;
+            var old = Value;
             Value = value;
-            _changed.ForEach(handle => handle(value));
+            _changed.ForEach(handle => handle(old, value));
         }
         private void Unsubscribe()
         {

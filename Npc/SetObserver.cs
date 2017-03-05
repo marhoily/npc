@@ -22,7 +22,7 @@ namespace Npc
         public SetObserver([NotNull] ILink link)
         {
             _link = link;
-            _link.Subscribe(value => OnSourceChanged((ObservableCollection<T>)value));
+            _link.Subscribe((_,value) => OnSourceChanged((ObservableCollection<T>)value));
             OnSourceChanged((ObservableCollection<T>)link.Value);
         }
 

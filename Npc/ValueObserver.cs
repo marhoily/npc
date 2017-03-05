@@ -13,7 +13,7 @@ namespace Npc
             if (!typeof(T).IsAssignableFrom(link.FormalType))
                 throw new Exception();
             _link = link;
-            _link.Subscribe(_ => PropertyChanged?
+            _link.Subscribe((a,b) => PropertyChanged?
                 .Invoke(this, new PropertyChangedEventArgs(nameof(Value))));
         }
 
@@ -21,7 +21,7 @@ namespace Npc
         public event PropertyChangedEventHandler PropertyChanged;
         public ValueObserver<T> WithSubscription(Action<T> handler)
         {
-            _link.Subscribe(x => handler((T)x));
+            _link.Subscribe((_,x) => handler((T)x));
             return this;
         }
     }
