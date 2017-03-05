@@ -68,7 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ValueObserverTest - Copy.cs" />
+    <Compile Include="SetObserverTest.cs" />
     <Compile Include="VisitorTest.cs" />
     <Compile Include="ValueObserverTest.cs" />
     <Compile Include="Samples.cs" />

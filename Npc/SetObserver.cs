@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using System.Linq;
 using JetBrains.Annotations;
 using static System.Collections.Specialized.NotifyCollectionChangedAction;
 
@@ -41,7 +42,7 @@ namespace Npc
         private void OnValueChanged()
         {
             var newSet = new HashSet<T>(_source);
-            foreach (var item in Value)
+            foreach (var item in Value.ToList())
                 if (!newSet.Contains(item))
                 {
                     Value.Remove(item);
