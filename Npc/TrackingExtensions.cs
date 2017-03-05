@@ -14,12 +14,10 @@ namespace Npc
     public static class TrackingExtensions
     {
         public static ValueObserver<TResult> Track<TSource, TResult>(this TSource source, Expression<Func<TSource, TResult>> pathExpression)
-            where TSource : INotifyPropertyChanged
         {
             return new ValueObserver<TResult>(Chain(source, source.GetLinks(pathExpression)));
         }
         public static SetObserver<TItem> TrackSet<TSource, TItem>(this TSource source, Expression<Func<TSource, ObservableCollection<TItem>>> pathExpression)
-            where TSource : INotifyPropertyChanged
         {
             return new SetObserver<TItem>(Chain(source, source.GetLinks(pathExpression)));
         }
