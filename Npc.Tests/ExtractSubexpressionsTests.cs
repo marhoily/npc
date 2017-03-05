@@ -7,7 +7,7 @@ using Xunit;
 
 namespace Npc.Tests
 {
-    public sealed class MyVisitorTest
+    public sealed class ExtractSubexpressionsTests
     {
         sealed class S
         {

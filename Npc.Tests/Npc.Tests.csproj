@@ -68,7 +68,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Class1.cs" />
+    <Compile Include="ExtractSubexpressionsTests.cs" />
     <Compile Include="ObservablesTest.cs" />
     <Compile Include="Samples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
