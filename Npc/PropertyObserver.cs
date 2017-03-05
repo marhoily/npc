@@ -5,13 +5,13 @@ using static System.Reflection.BindingFlags;
 
 namespace Npc
 {
-    internal sealed class NpcObserver<T> : ResourceContainer, IObservable<T>
+    internal sealed class PropertyObserver<T> : ResourceContainer, IObservable<T>
     {
         private INotifyPropertyChanged _source;
         private readonly string _propertyName;
         private readonly List<Action<T>> _changed = new List<Action<T>>();
 
-        public NpcObserver(string propertyName)
+        public PropertyObserver(string propertyName)
         {
             _propertyName = propertyName;
             Resources.Add(Unsubscribe);

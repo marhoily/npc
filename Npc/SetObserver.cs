@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Collections.Specialized;
+using static System.Collections.Specialized.NotifyCollectionChangedAction;
 
 namespace Npc
 {
@@ -50,20 +51,20 @@ namespace Npc
         {
             switch (e.Action)
             {
-                case NotifyCollectionChangedAction.Add:
+                case Add:
                     foreach (T item in e.NewItems)
                     {
                         if (!Value.Add(item)) throw new Exception("Duplicate!");
-                        _changed.ForEach(handle =>
-                            handle(new SetChange<T>(SetOperation.Add, item)));
+                        _changed.ForEach(handle => handle(
+                            new SetChange<T>(SetOperation.Add, item)));
                     }
                     break;
-                case NotifyCollectionChangedAction.Remove:
+                case Remove:
                     foreach (T item in e.OldItems)
                     {
                         if (!Value.Remove(item)) throw new Exception("WTF!?");
-                        _changed.ForEach(handle =>
-                            handle(new SetChange<T>(SetOperation.Remove, item)));
+                        _changed.ForEach(handle => handle(
+                            new SetChange<T>(SetOperation.Remove, item)));
                     }
                     break;
                 default:
