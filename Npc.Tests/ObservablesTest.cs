@@ -11,7 +11,9 @@ namespace Npc.Tests
     {
         private readonly S _z = new S("z", null);
         private readonly List<string> _log = new List<string>();
- 
+        private readonly S[] _original = Chain(start: 'a', count: 3);
+        private readonly S[] _replacement = Chain(start: 'd', count: 3);
+
         [Fact]
         public void HelperMethod_Chain_Creates_S_Objects()
         {
@@ -55,54 +57,40 @@ namespace Npc.Tests
         [Fact]
         public void Should_Observe_Correct_Value_After_Changes()
         {
-            var original = Chain(start: 'a', count: 3);
-            var replacement = Chain(start: 'd', count: 3);
-            var observable = original[0].Track(s => s.X.X.Name);
+            var observable = _original[0].Track(s => s.X.X.Name);
 
             // Changing the property itself
-            original[1].Name = "x";
+            _original[1].Name = "x";
             observable.Value.Should().Be("c");
 
             // Changing unrelated property upstream
-            original[2].Name = "x";
+            _original[2].Name = "x";
             observable.Value.Should().Be("x");
 
             // Changing the chain in the middle
-            original[1].X = replacement[2];
+            _original[1].X = _replacement[2];
             observable.Value.Should().Be("f");
 
             // Changing the chain in the root
-            original[0].X = replacement[0];
-            original[0].ToString().Should().Be("a*d*e*f");
+            _original[0].X = _replacement[0];
+            _original[0].ToString().Should().Be("a*d*e*f");
             observable.Value.Should().Be("e");
         }
         [Fact]
-        public void Long_Chain()
+        public void Should_Notify_Subscribers()
         {
-            var chain = Chain(start: 'a', count: 3);
-            var observable = chain[0].Track(s => s.X.X.X);
+            var observable = _original[0].Track(s => s.X.X.X);
             observable.Subscribe(s => _log.Add(s?.ToString() ?? "<null>"));
 
-            chain[2].X = _z;
-            observable.Value.Should().Be(_z);
+            _original[2].X = _z;
             DrainLog().Should().Equal("z");
-            chain[0].ToString().Should().Be("a*b*c*z");
 
-            chain[1].X = null;
-            chain[0].ToString().Should().Be("a*b*");
-            observable.Value.Should().Be(null);
+            _original[1].X = null;
             DrainLog().Should().Equal("<null>");
 
             var replacement = Chain(start: 'd', count: 3);
-            chain[0].X = replacement[0];
-            observable.Value.ToString().Should().Be("f");
+            _original[0].X = replacement[0];
             DrainLog().Should().Equal("f");
-
-            chain.Select(i => i.ToString()).Should().Equal("a*d*e*f", "b", "cz");
-            replacement.Select(i => i.ToString()).Should().Equal("d*e*f", "e*f", "f");
-            observable.Dispose();
-            chain.Select(i => i.ToString()).Should().Equal("adef", "b", "cz");
-            replacement.Select(i => i.ToString()).Should().Equal("def", "ef", "f");
         }
         private static S[] Chain(char start, int count)
         {
