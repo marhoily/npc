@@ -4,12 +4,12 @@ using Xunit;
 
 namespace Npc.Tests
 {
-    public sealed class SetObserverTest 
+    public sealed class SetObserverTest
     {
-        // private readonly List<string> _log = new List<string>();
+        private int _sum;
         private readonly Samples.S[] _original = Samples.Chain(start: 'a', count: 3);
         private readonly Samples.S[] _replacement = Samples.Chain(start: 'd', count: 3);
-        
+
         [Fact]
         public void Track_Should_Observe_Correct_Value()
         {
@@ -58,6 +58,25 @@ namespace Npc.Tests
             {
                 _original[0].X = _replacement[0].X;
                 setObserver.Value.Should().Equal(36);
+            }
+        }
+     
+        [Fact]
+        public void Should_Raise_Events()
+        {
+            using (var setObserver = _original[0].TrackSet(s => s.X.X.Collection))
+            {
+                setObserver.Added += n => _sum += n;
+                setObserver.Removed += n => _sum -= n;
+                _original[2].Collection.Add(1);
+                _original[2].Collection.Add(2);
+                _original[2].Collection.Add(4);
+                _original[2].Collection.Remove(1);
+                _sum.Should().Be(6);
+                _replacement[2].Collection.Add(2);
+                _replacement[2].Collection.Add(8);
+                _original[0].X = _replacement[0].X;
+                _sum.Should().Be(10);
             }
         }
     }
