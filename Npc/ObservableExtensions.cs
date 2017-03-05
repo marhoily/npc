@@ -23,6 +23,11 @@ namespace Npc
                     => current.ChainObservable<INotifyPropertyChanged>(part))
                     .ChainObservable<T>(path.Last());
         }
+        public static IObservable<T> WithSubscription<T>(this IObservable<T> src, Action<T> handler)
+        {
+            src.Subscribe(handler);
+            return src;
+        }
 
         private static NpcObserver<T> CreateNpc<T>(this INotifyPropertyChanged source, string propertyName)
         {
@@ -36,12 +41,6 @@ namespace Npc
             npc.Resources.Add(source.Dispose);
             source.Subscribe(npc.ChangeSource);
             return npc;
-        }
-
-        public static IObservable<T> WithSubscription<T>(this IObservable<T> src, Action<T> handler)
-        {
-            src.Subscribe(handler);
-            return src;
         }
     }
 }

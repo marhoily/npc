@@ -19,7 +19,6 @@ namespace Npc
 
         public T Value { get; private set; }
         public void Subscribe(Action<T> handler) => _changed.Add(handler);
-
         public void ChangeSource(INotifyPropertyChanged source)
         {
             if (ReferenceEquals(_source, source))
@@ -35,6 +34,7 @@ namespace Npc
                 _source.PropertyChanged += OnPropertyChanged;
             }
         }
+
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
             if (e.PropertyName == _propertyName)
