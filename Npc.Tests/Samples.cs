@@ -4,12 +4,13 @@ using System.Runtime.CompilerServices;
 
 namespace Npc.Tests
 {
-    public static class NpcSamples
+    public static class Samples
     {
         public sealed class P
         {
             public P(S x) { X = x; }
             public S X { get; set; }
+            public P Y => this;
         }
         public sealed class S : INotifyPropertyChanged
         {
