@@ -41,7 +41,7 @@ namespace Npc
             _changed.ForEach(handle => handle(value));
         }
 
-        public override string ToString() => $"ConstLink({_name})";
+        public override string ToString() => $"Const({_name})";
     }
     public sealed class NpcLink : ResourceContainer, ILink
     {
@@ -49,7 +49,7 @@ namespace Npc
         private readonly string _propertyName;
         private readonly List<Action<object>> _changed = new List<Action<object>>();
         public Type FormalType { get; }
-        public override string ToString() => $"NpcLink({_propertyName})";
+        public override string ToString() => $"Npc({_propertyName})";
 
         public NpcLink(Type formalType, string propertyName)
         {
