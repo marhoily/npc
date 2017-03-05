@@ -31,5 +31,11 @@ namespace Npc.Tests
             new P(new S("x", null)).GetLinks(s => s.Y.Y)
                 .Select(x => x.ToString()).Should().Equal("Const(Y)", "Const(Y)");
         }
+        [Fact]
+        public void DependencyProperty()
+        {
+            new S("x", null).GetLinks(s => s.D)
+                .Select(x => x.ToString()).Should().Equal("DependencyProperty(D)");
+        }
     }
 }

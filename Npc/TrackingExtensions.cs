@@ -5,6 +5,9 @@ using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
+using System.Windows;
+using static System.Reflection.BindingFlags;
+using Expression = System.Linq.Expressions.Expression;
 
 namespace Npc
 {
@@ -53,7 +56,12 @@ namespace Npc
                 var propertyInfo = node.Member as PropertyInfo;
                 if (propertyInfo != null)
                 {
-                    if (typeof(INotifyPropertyChanged).IsAssignableFrom(node.Expression.Type))
+                    var dependencyPropertyDeclaration = propertyInfo.DeclaringType?
+                        .GetField(propertyInfo.Name+"Property", Public | Static)?
+                        .GetValue(null) as DependencyProperty;
+                    if (dependencyPropertyDeclaration != null)
+                        Links.Add(new DependencyPropertyLink(dependencyPropertyDeclaration));
+                    else if (typeof(INotifyPropertyChanged).IsAssignableFrom(node.Expression.Type))
                         Links.Add(new NpcLink(propertyInfo.PropertyType, propertyInfo.Name));
                     else
                         Links.Add(new ConstLink(propertyInfo.PropertyType, 
