@@ -10,7 +10,7 @@ using static Npc.Tests.Samples;
 
 namespace Npc.Tests
 {
-    public sealed class ObservablesTest : INotifyPropertyChanged
+    public sealed class ValueObserverTest : INotifyPropertyChanged
     {
         private readonly List<string> _log = new List<string>();
         private readonly S[] _original = Chain(start: 'a', count: 3);
@@ -135,15 +135,6 @@ namespace Npc.Tests
             Private = _replacement[0];
             OnPropertyChanged(nameof(Private));
             observable.Value.Should().Be("e");
-        }
-        private static S[] Chain(char start, int count)
-        {
-            var proto = Enumerable.Range(0, count)
-                .Select(i => new S(new string((char)(start + i), 1), null))
-                .ToArray();
-            foreach (var p in proto.Zip(proto.Skip(1), (a, b) => new { a, b }))
-                p.a.X = p.b;
-            return proto;
         }
         private IEnumerable<string> DrainLog()
         {

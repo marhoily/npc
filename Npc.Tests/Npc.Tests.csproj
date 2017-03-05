@@ -68,8 +68,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ExpressionsTest.cs" />
-    <Compile Include="ObservablesTest.cs" />
+    <Compile Include="ValueObserverTest - Copy.cs" />
+    <Compile Include="VisitorTest.cs" />
+    <Compile Include="ValueObserverTest.cs" />
     <Compile Include="Samples.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

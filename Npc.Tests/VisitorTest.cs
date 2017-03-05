@@ -5,7 +5,7 @@ using static Npc.Tests.Samples;
 
 namespace Npc.Tests
 {
-    public sealed class ExpressionsTest 
+    public sealed class VisitorTest 
     {
         [Fact]
         public void Npc()

@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
@@ -13,6 +14,11 @@ namespace Npc
             where TSource : INotifyPropertyChanged
         {
             return new ValueObserver<TResult>(Chain(source, source.GetLinks(pathExpression)));
+        }
+        public static SetObserver<TItem> TrackSet<TSource, TItem>(this TSource source, Expression<Func<TSource, ObservableCollection<TItem>>> pathExpression)
+            where TSource : INotifyPropertyChanged
+        {
+            return new SetObserver<TItem>(Chain(source, source.GetLinks(pathExpression)));
         }
 
         public static List<ILink> GetLinks<TSource, TResult>(this TSource _, Expression<Func<TSource, TResult>> pathExpression) 

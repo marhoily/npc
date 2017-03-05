@@ -1,11 +1,22 @@
 ﻿using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace Npc.Tests
 {
     public static class Samples
     {
+        public static S[] Chain(char start, int count)
+        {
+            var proto = Enumerable.Range(0, count)
+                .Select(i => new S(new string((char)(start + i), 1), null))
+                .ToArray();
+            foreach (var p in proto.Zip(proto.Skip(1), (a, b) => new { a, b }))
+                p.a.X = p.b;
+            return proto;
+        }
         public sealed class P
         {
             public P(S x) { X = x; }
@@ -38,6 +49,7 @@ namespace Npc.Tests
                 }
             }
 
+            public ObservableCollection<int> Collection { get; } = new ObservableCollection<int>();
             public S(string name, S x)
             {
                 _x = x;

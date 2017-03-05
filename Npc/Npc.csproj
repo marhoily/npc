@@ -51,12 +51,6 @@
     <Compile Include="NpcLink.cs">
       <DependentUpon>ILink.cs</DependentUpon>
     </Compile>
-    <Compile Include="SetChange.cs">
-      <DependentUpon>SetObserver.cs</DependentUpon>
-    </Compile>
-    <Compile Include="SetOperation.cs">
-      <DependentUpon>SetObserver.cs</DependentUpon>
-    </Compile>
     <Compile Include="TrackingExtensions.cs" />
     <Compile Include="ResourceContainer.cs" />
     <Compile Include="ValueObserver.cs" />
