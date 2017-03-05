@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using FluentAssertions;
+using JetBrains.Annotations;
 using Xunit;
 using static Npc.Tests.Samples;
 
@@ -125,18 +127,15 @@ namespace Npc.Tests
             this.Track(x => x.Private.Name).Value.Should().Be("x");
         }
 
-    //   [Fact]
-    //   public void Should_Work_When_Some_Parts_Of_Path_Are_Not_Npc()
-    //   {
-    //       var observable = _original[0].Track(x => x.Y.X.Name);
-    //       observable.Value.Should().Be("x");
-    //       Private.Name = "changed";
-    //       observable.Value.Should().Be("changed");
-    //       Private = _replacement[0];
-    //       observable.Value.Should().Be("changed");
-    //       OnPropertyChanged(nameof(Private));
-    //       observable.Value.Should().Be("d");
-    //   }
+        [Fact]
+        public void Should_Work_When_Some_Parts_Of_Path_Are_Not_Npc()
+        {
+            var observable = this.Track(self => self.Private.Y.X.Name);
+            observable.Value.Should().Be("y");
+            Private = _replacement[0];
+            OnPropertyChanged(nameof(Private));
+            observable.Value.Should().Be("e");
+        }
         private static S[] Chain(char start, int count)
         {
             var proto = Enumerable.Range(0, count)
@@ -153,7 +152,13 @@ namespace Npc.Tests
             return result;
         }
 
-        private S Private { get; } = Chain('x', 3)[0];
+        private S Private { get; set; } = Chain('x', 3)[0];
         public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
     }
 }
