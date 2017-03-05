@@ -44,11 +44,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="ObservableExtensions.cs" />
     <Compile Include="ResourceContainer.cs" />
     <Compile Include="CollectionObserver.cs" />
     <Compile Include="IObservable.cs" />
-    <Compile Include="Npc.cs" />
-    <Compile Include="NpcExtensions.cs" />
+    <Compile Include="NpcObserver.cs" />
     <Compile Include="PropertiesExplorationExtensions.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
