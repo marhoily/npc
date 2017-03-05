@@ -9,10 +9,10 @@ namespace Npc
 {
     public static class TrackingExtensions
     {
-        public static OneValue<TResult> Track<TSource, TResult>(this TSource source, Expression<Func<TSource, TResult>> pathExpression)
+        public static ValueObserver<TResult> Track<TSource, TResult>(this TSource source, Expression<Func<TSource, TResult>> pathExpression)
             where TSource : INotifyPropertyChanged
         {
-            return new OneValue<TResult>(Chain(source, source.GetLinks(pathExpression)));
+            return new ValueObserver<TResult>(Chain(source, source.GetLinks(pathExpression)));
         }
 
         public static List<ILink> GetLinks<TSource, TResult>(this TSource _, Expression<Func<TSource, TResult>> pathExpression) 
