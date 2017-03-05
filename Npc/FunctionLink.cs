@@ -3,7 +3,26 @@ using System.Collections.Generic;
 
 namespace Npc
 {
-    public sealed class ConstLink : ResourceContainer, ILink
+    public sealed class ConstLink<T> : ResourceContainer, ILink
+    {
+        public object Value { get; }
+        public Type FormalType => typeof(T);
+
+        public ConstLink(object value)
+        {
+            Value = value;
+        }
+
+        public void Subscribe(Action<object> changed)
+        {
+        }
+
+        public void ChangeSource(object value)
+        {
+            throw new NotSupportedException();
+        }
+    }
+    public sealed class FunctionLink : ResourceContainer, ILink
     {
         private readonly string _name;
         private readonly Func<object, object> _exp;
@@ -13,7 +32,7 @@ namespace Npc
         public void Subscribe(Action<object> handler) => _changed.Add(handler);
         public Type FormalType { get; }
 
-        public ConstLink(Type formalType, string name, Func<object, object> exp)
+        public FunctionLink(Type formalType, string name, Func<object, object> exp)
         {
             _name = name;
             _exp = exp;
@@ -30,6 +49,6 @@ namespace Npc
             _changed.ForEach(handle => handle(value));
         }
 
-        public override string ToString() => $"Const({_name})";
+        public override string ToString() => $"Function({_name})";
     }
 }

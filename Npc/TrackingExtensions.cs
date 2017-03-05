@@ -62,7 +62,7 @@ namespace Npc
                     else if (typeof(INotifyPropertyChanged).IsAssignableFrom(node.Expression.Type))
                         Links.Add(new NpcLink(propertyInfo.PropertyType, propertyInfo.Name));
                     else
-                        Links.Add(new ConstLink(propertyInfo.PropertyType, 
+                        Links.Add(new FunctionLink(propertyInfo.PropertyType, 
                             propertyInfo.Name, obj => propertyInfo.GetValue(obj)));
                 }
                 return base.VisitMember(node);

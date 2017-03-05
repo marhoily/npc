@@ -38,5 +38,11 @@ namespace Npc.Tests
             _original[0].Xs.RemoveAt(0);
             _destination.Should().BeEmpty();
         }
+        [Fact]
+        public void ChangeItem()
+        {
+            _original[0].Xs[0].Name = "1234";
+            _destination.Should().Equal(4);
+        }
     }
 }

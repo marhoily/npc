@@ -14,22 +14,22 @@ namespace Npc.Tests
                 .Select(x => x.ToString()).Should().Equal("Npc(Name)");
         }
         [Fact]
-        public void Const()
+        public void Function()
         {
             "x".GetLinks(s => s.Length)
-                .Select(x => x.ToString()).Should().Equal("Const(Length)");
+                .Select(x => x.ToString()).Should().Equal("Function(Length)");
         }
         [Fact]
         public void Many()
         {
             new S("x", null).GetLinks(s => s.Name.Length)
-                .Select(x => x.ToString()).Should().Equal("Npc(Name)", "Const(Length)");
+                .Select(x => x.ToString()).Should().Equal("Npc(Name)", "Function(Length)");
         }
         [Fact]
-        public void Should_Not_Group_Constants()
+        public void Should_Not_Group_Functionants()
         {
             new P(new S("x", null)).GetLinks(s => s.Y.Y)
-                .Select(x => x.ToString()).Should().Equal("Const(Y)", "Const(Y)");
+                .Select(x => x.ToString()).Should().Equal("Function(Y)", "Function(Y)");
         }
         [Fact]
         public void DependencyProperty()

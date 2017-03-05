@@ -8,6 +8,12 @@ namespace Npc
         public static SetSelector<TTo, TFrom> Select<TTo, TFrom>(
             this IObservableSet<TFrom> source, Func<TFrom, TTo> selector)
         {
+            return new SetSelector<TTo, TFrom>(source, x =>
+                new ValueObserver<TTo>(new ConstLink<TTo>(selector(x))));
+        }
+        public static SetSelector<TTo, TFrom> Select<TTo, TFrom>(
+            this IObservableSet<TFrom> source, Func<TFrom, ValueObserver<TTo>> selector)
+        {
             return new SetSelector<TTo,TFrom>(source, selector);
         }
 
