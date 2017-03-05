@@ -1,33 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Windows;
 
 namespace Npc
 {
-    public sealed class DependencyPropertyLink : ResourceContainer, ILink
-    {
-        private readonly DependencyProperty _declaration;
-
-        public DependencyPropertyLink(DependencyProperty declaration)
-        {
-            _declaration = declaration;
-        }
-
-        public object Value { get; }
-        public Type FormalType { get; }
-        public void Subscribe(Action<object> changed)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void ChangeSource(object value)
-        {
-            throw new NotImplementedException();
-        }
-
-        public override string ToString() => $"DependencyProperty({_declaration.Name})";
-    }
-
     public sealed class ConstLink : ResourceContainer, ILink
     {
         private readonly string _name;

@@ -46,6 +46,7 @@ namespace Npc.Tests
                 {
                     if (Equals(value, _x)) return;
                     _x = value;
+                    D = value;
                     OnPropertyChanged();
                 }
             }
@@ -53,7 +54,7 @@ namespace Npc.Tests
             public ObservableCollection<int> Collection { get; } = new ObservableCollection<int>();
             public S(string name, S x)
             {
-                _x = x;
+                X = x;
                 Name = name;
             }
 
