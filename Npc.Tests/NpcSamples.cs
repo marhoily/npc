@@ -6,6 +6,11 @@ namespace Npc.Tests
 {
     public static class NpcSamples
     {
+        public sealed class P
+        {
+            public P(S x) { X = x; }
+            public S X { get; set; }
+        }
         public sealed class S : INotifyPropertyChanged
         {
             public string Name
@@ -19,6 +24,7 @@ namespace Npc.Tests
                 }
             }
 
+            public P Y => new P(X);
             private S _x;
             public S X
             {

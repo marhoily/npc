@@ -135,7 +135,7 @@ namespace Npc.Tests
         [Fact]
         public void Should_Work_When_Some_Parts_Of_Path_Are_Not_Npc()
         {
-            var observable = this.Track(x => x.Private.Name);
+            var observable = _original[0].Track(x => x.Y.X.Name);
             observable.Value.Should().Be("x");
             Private.Name = "changed";
             observable.Value.Should().Be("changed");
