@@ -106,6 +106,17 @@ namespace Npc.Tests
 
             DrainLog().Should().BeEmpty();
         }
+
+        [Fact]
+        public void Should_Unsubscribe_From_Replaced_Pieces_Of_The_Chain()
+        {
+            var rest = _original[1];
+            var observable = _original[0].Track(s => s.X.X.Name);
+            observable.Subscribe(s => { });
+            rest.ToString().Should().Be("b*c*");
+            _original[0].X = _replacement[1];
+            rest.ToString().Should().Be("bc");
+        }
         private static S[] Chain(char start, int count)
         {
             var proto = Enumerable.Range(0, count)
