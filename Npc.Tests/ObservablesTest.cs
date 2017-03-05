@@ -9,7 +9,6 @@ namespace Npc.Tests
 {
     public sealed class ObservablesTest
     {
-        private readonly S _z = new S("z", null);
         private readonly List<string> _log = new List<string>();
         private readonly S[] _original = Chain(start: 'a', count: 3);
         private readonly S[] _replacement = Chain(start: 'd', count: 3);
@@ -22,14 +21,14 @@ namespace Npc.Tests
         [Fact]
         public void Subscription_Is_Marked_With_An_Asterisk()
         {
-            var o1 = _z.Observe<string>(nameof(S.Name), _log.Add);
-            _z.ToString().Should().Be("z*");
-            var o2 = _z.Observe<string>(nameof(S.Name), _log.Add);
-            _z.ToString().Should().Be("z**");
+            var o1 = _original[2].Observe<string>(nameof(S.Name), _log.Add);
+            _original[2].ToString().Should().Be("c*");
+            var o2 = _original[2].Observe<string>(nameof(S.Name), _log.Add);
+            _original[2].ToString().Should().Be("c**");
             o1.Dispose();
-            _z.ToString().Should().Be("z*");
+            _original[2].ToString().Should().Be("c*");
             o2.Dispose();
-            _z.ToString().Should().Be("z");
+            _original[2].ToString().Should().Be("c");
         }
 
         [Fact]
@@ -82,14 +81,13 @@ namespace Npc.Tests
             var observable = _original[0].Track(s => s.X.X.X);
             observable.Subscribe(s => _log.Add(s?.ToString() ?? "<null>"));
 
-            _original[2].X = _z;
-            DrainLog().Should().Equal("z");
+            _original[2].X = _replacement[0];
+            DrainLog().Should().Equal("def");
 
             _original[1].X = null;
             DrainLog().Should().Equal("<null>");
 
-            var replacement = Chain(start: 'd', count: 3);
-            _original[0].X = replacement[0];
+            _original[0].X = _replacement[0];
             DrainLog().Should().Equal("f");
         }
         private static S[] Chain(char start, int count)
@@ -101,7 +99,7 @@ namespace Npc.Tests
                 p.a.X = p.b;
             return proto;
         }
-        private List<string> DrainLog()
+        private IEnumerable<string> DrainLog()
         {
             var result = _log.ToList();
             _log.Clear();
