@@ -5,7 +5,7 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Npc", "Npc\Npc.csproj", "{371A9A94-E392-47AF-BA11-FBA1023185CC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Npc.Tests", "..\Npc.Tests\Npc.Tests.csproj", "{C19C4878-194C-498D-8AD4-C9C18F6C4154}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Npc.Tests", "Npc.Tests\Npc.Tests.csproj", "{C19C4878-194C-498D-8AD4-C9C18F6C4154}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
