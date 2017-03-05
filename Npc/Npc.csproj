@@ -48,6 +48,7 @@
     <Compile Include="ConstLink.cs">
       <DependentUpon>ILink.cs</DependentUpon>
     </Compile>
+    <Compile Include="DependencyPropertyLink.cs" />
     <Compile Include="ILink.cs" />
     <Compile Include="NpcLink.cs">
       <DependentUpon>ILink.cs</DependentUpon>
