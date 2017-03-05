@@ -33,7 +33,7 @@ namespace Npc
 
         private static IObservable<T> Track<T>(this INotifyPropertyChanged source, params string[] path)
         {
-            if (path.Length == 0) throw new ArgumentOutOfRangeException(nameof(path));
+            if (path.Length == 0) throw new ArgumentOutOfRangeException(nameof(path), "Track does not accept paths of length 0");
             if (path.Length == 1) return source.Observe<T>(path.Single());
             var first = source.Observe<INotifyPropertyChanged>(path.First());
             var middle = path.Skip(count: 1).Take(path.Length - 2);
