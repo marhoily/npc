@@ -1,46 +1,60 @@
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Linq.Expressions;
+using System.Reflection;
 
 namespace Npc
 {
     public static class ObservableExtensions
     {
-        public static IObservable<TResult> Track<TSource, TResult>(this TSource source, Expression<Func<TSource, TResult>> pathExpression)
+        public static OneValue<TResult> Track<TSource, TResult>(this TSource source, Expression<Func<TSource, TResult>> pathExpression)
             where TSource : INotifyPropertyChanged
         {
-            return source.Track<TResult>(pathExpression.ExtractPropertyNames().Skip(count: 1).ToArray());
-        }
-        public static IObservable<T> Track<T>(this INotifyPropertyChanged source, params string[] path)
-        {
-            if (path.Length == 0) throw new ArgumentOutOfRangeException(nameof(path), "Track does not accept paths of length 0");
-            if (path.Length == 1) return source.ObserveProperty<T>(path.Single());
-            var first = (IObservable<INotifyPropertyChanged>)
-                source.ObserveProperty<INotifyPropertyChanged>(path.First());
-            var middle = path.Skip(count: 1).Take(path.Length - 2);
-            return middle.Aggregate(first, (current, part)
-                    => current.ChainObservable<INotifyPropertyChanged>(part))
-                    .ChainObservable<T>(path.Last());
-        }
-        public static IObservable<T> WithSubscription<T>(this IObservable<T> src, Action<T> handler)
-        {
-            src.Subscribe(handler);
-            return src;
+            return new OneValue<TResult>(Chain(source, source.GetLinks(pathExpression)));
         }
 
-        private static PropertyObserver<T> ObserveProperty<T>(this INotifyPropertyChanged source, string propertyName)
+        public static List<ILink> GetLinks<TSource, TResult>(this TSource _, Expression<Func<TSource, TResult>> pathExpression) 
         {
-            var npc = new PropertyObserver<T>(propertyName);
-            npc.ChangeSource(source);
-            return npc;
+            var visitor = new Visitor();
+            visitor.Visit(pathExpression.Body);
+            visitor.Links.Reverse();
+            return visitor.Links;
         }
-        private static IObservable<T> ChainObservable<T>(this IObservable<INotifyPropertyChanged> source, string propertyName)
+
+        private static ILink Chain(object source, List<ILink> links)
         {
-            var npc = ObserveProperty<T>(source.Value, propertyName);
-            npc.Resources.Add(source.Dispose);
-            source.Subscribe(npc.ChangeSource);
-            return npc;
+            if (links.Count == 0) throw new ArgumentOutOfRangeException(nameof(links), "Track does not accept paths of length 0");
+            links[0].ChangeSource(source);
+            if (links.Count == 1) return links[0];
+            return links.Skip(count: 1).Aggregate(links[0], Combine);
+        }
+        private static ILink Combine(ILink source, ILink result)
+        {
+            var resourceContainer = (ResourceContainer)result;
+            resourceContainer.Resources.Add(source.Dispose);
+            source.Subscribe(result.ChangeSource);
+            result.ChangeSource(source.Value);
+            return result;
+        }
+
+        sealed class Visitor : ExpressionVisitor
+        {
+            public List<ILink> Links { get; } = new List<ILink>();
+            protected override Expression VisitMember(MemberExpression node)
+            {
+                var propertyInfo = node.Member as PropertyInfo;
+                if (propertyInfo != null)
+                {
+                    if (typeof(INotifyPropertyChanged).IsAssignableFrom(node.Expression.Type))
+                        Links.Add(new NpcLink(propertyInfo.PropertyType, propertyInfo.Name));
+                    else
+                        Links.Add(new ConstLink(propertyInfo.PropertyType, 
+                            propertyInfo.Name, obj => propertyInfo.GetValue(obj)));
+                }
+                return base.VisitMember(node);
+            }
         }
     }
 }

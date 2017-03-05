@@ -5,79 +5,30 @@ using static System.Reflection.BindingFlags;
 
 namespace Npc
 {
-    internal sealed class PropertyObserver<T> : ResourceContainer, IObservable<T>
-    {
-        private INotifyPropertyChanged _source;
-        private readonly string _propertyName;
-        private readonly List<Action<T>> _changed = new List<Action<T>>();
 
-        public PropertyObserver(string propertyName)
-        {
-            _propertyName = propertyName;
-            Resources.Add(Unsubscribe);
-        }
-
-        public T Value { get; private set; }
-        public void Subscribe(Action<T> handler) => _changed.Add(handler);
-        public void ChangeSource(INotifyPropertyChanged source)
-        {
-            if (ReferenceEquals(_source, source))
-                return;
-            if (_source != null)
-            {
-                _source.PropertyChanged -= OnPropertyChanged;
-            }
-            _source = source;
-            UpdateValue();
-            if (_source != null)
-            {
-                _source.PropertyChanged += OnPropertyChanged;
-            }
-        }
-
-        private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
-        {
-            if (e.PropertyName == _propertyName)
-                UpdateValue();
-        }
-        private void UpdateValue()
-        {
-            var value = (T)_source?
-                .GetType()
-                .GetProperty(_propertyName, Instance | Public | NonPublic)
-                .GetValue(_source);
-
-            if (Equals(Value, value))
-                return;
-            Value = value;
-            _changed.ForEach(handle => handle(value));
-        }
-        private void Unsubscribe()
-        {
-            if (_source != null)
-                _source.PropertyChanged -= OnPropertyChanged;
-        }
-    }
-    public interface ILink
+    public interface ILink : IDisposable
     {
         object Value { get; }
+        Type FormalType { get; }
         void Subscribe(Action<object> changed);
         void ChangeSource(object value);
     }
 
     public sealed class ConstLink : ResourceContainer, ILink
     {
-        public string Name { get; }
+        private string _name;
         private readonly Func<object, object> _exp;
         private readonly List<Action<object>> _changed = new List<Action<object>>();
         private object _source;
         public object Value { get; private set; }
         public void Subscribe(Action<object> handler) => _changed.Add(handler);
+        public Type FormalType { get; }
 
-        public ConstLink(string name, Func<object, object> exp)
+        public ConstLink(Type formalType, string name, Func<object, object> exp)
         {
-            Name = name;
+            _name = name;
             _exp = exp;
+            FormalType = formalType;
         }
 
         public void ChangeSource(object source)
@@ -89,16 +40,21 @@ namespace Npc
             Value = value;
             _changed.ForEach(handle => handle(value));
         }
+
+        public override string ToString() => $"ConstLink({_name})";
     }
     public sealed class NpcLink : ResourceContainer, ILink
     {
         private INotifyPropertyChanged _source;
-        public readonly string PropertyName;
+        private readonly string _propertyName;
         private readonly List<Action<object>> _changed = new List<Action<object>>();
+        public Type FormalType { get; }
+        public override string ToString() => $"NpcLink({_propertyName})";
 
-        public NpcLink(string propertyName)
+        public NpcLink(Type formalType, string propertyName)
         {
-            PropertyName = propertyName;
+            _propertyName = propertyName;
+            FormalType = formalType;
             Resources.Add(Unsubscribe);
         }
 
@@ -122,14 +78,14 @@ namespace Npc
 
         private void OnPropertyChanged(object sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == PropertyName)
+            if (e.PropertyName == _propertyName)
                 UpdateValue();
         }
         private void UpdateValue()
         {
             var value = _source?
                 .GetType()
-                .GetProperty(PropertyName, Instance | Public | NonPublic)
+                .GetProperty(_propertyName, Instance | Public | NonPublic)
                 .GetValue(_source);
 
             if (Equals(Value, value))
@@ -142,5 +98,6 @@ namespace Npc
             if (_source != null)
                 _source.PropertyChanged -= OnPropertyChanged;
         }
+
     }
 }
