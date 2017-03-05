@@ -57,6 +57,7 @@
     <Compile Include="ObservableSetExtensions.cs">
       <DependentUpon>IObservableSet.cs</DependentUpon>
     </Compile>
+    <Compile Include="SelectorMap.cs" />
     <Compile Include="SetSelector.cs" />
     <Compile Include="SetSynchronizer.cs" />
     <Compile Include="TrackingExtensions.cs" />
