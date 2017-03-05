@@ -44,15 +44,15 @@ namespace Npc.Tests
         [Fact]
         public void Track_Should_Observe_Correct_Value()
         {
-          //  Chain(start: 'a', count: 3)[0].Track(s => s.Name).Value.Should().Be("a");
+            Chain(start: 'a', count: 3)[0].Track(s => s.Name).Value.Should().Be("a");
             Chain(start: 'a', count: 3)[0].Track(s => s.X.Name).Value.Should().Be("b");
-         //   Chain(start: 'a', count: 3)[0].Track(s => s.X.X.Name).Value.Should().Be("c");
-         //   Chain(start: 'a', count: 3)[0].Track(s => s.X.X.X.Name).Value.Should().BeNull();
-         //   Chain(start: 'a', count: 3)[0].Track(s => s.X.X.X.X.Name).Value.Should().BeNull();
-         //
-         //   Chain(start: 'a', count: 3)[0].Track(s => s.X).Value.ToString().Should().Be("bc");
-         //   Chain(start: 'a', count: 3)[0].Track(s => s.X.X).Value.ToString().Should().Be("c");
-         //   Chain(start: 'a', count: 3)[0].Track(s => s.X.X.X).Value.Should().BeNull();
+            Chain(start: 'a', count: 3)[0].Track(s => s.X.X.Name).Value.Should().Be("c");
+            Chain(start: 'a', count: 3)[0].Track(s => s.X.X.X.Name).Value.Should().BeNull();
+            Chain(start: 'a', count: 3)[0].Track(s => s.X.X.X.X.Name).Value.Should().BeNull();
+          
+            Chain(start: 'a', count: 3)[0].Track(s => s.X).Value.ToString().Should().Be("bc");
+            Chain(start: 'a', count: 3)[0].Track(s => s.X.X).Value.ToString().Should().Be("c");
+            Chain(start: 'a', count: 3)[0].Track(s => s.X.X.X).Value.Should().BeNull();
         }
         [Fact]
         public void Should_Observe_Correct_Value_After_Changes()
