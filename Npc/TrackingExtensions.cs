@@ -7,7 +7,7 @@ using System.Reflection;
 
 namespace Npc
 {
-    public static class ObservableExtensions
+    public static class TrackingExtensions
     {
         public static OneValue<TResult> Track<TSource, TResult>(this TSource source, Expression<Func<TSource, TResult>> pathExpression)
             where TSource : INotifyPropertyChanged
