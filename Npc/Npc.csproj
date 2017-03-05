@@ -50,9 +50,15 @@
     </Compile>
     <Compile Include="DependencyPropertyLink.cs" />
     <Compile Include="ILink.cs" />
+    <Compile Include="IObservableSet.cs" />
     <Compile Include="NpcLink.cs">
       <DependentUpon>ILink.cs</DependentUpon>
     </Compile>
+    <Compile Include="ObservableSetExtensions.cs">
+      <DependentUpon>IObservableSet.cs</DependentUpon>
+    </Compile>
+    <Compile Include="SetSelector.cs" />
+    <Compile Include="SetSynchronizer.cs" />
     <Compile Include="TrackingExtensions.cs" />
     <Compile Include="ResourceContainer.cs" />
     <Compile Include="ValueObserver.cs" />

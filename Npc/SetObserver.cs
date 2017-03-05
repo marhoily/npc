@@ -8,7 +8,7 @@ using static System.Collections.Specialized.NotifyCollectionChangedAction;
 
 namespace Npc
 {
-    public sealed class SetObserver<T> : IDisposable
+    public sealed class SetObserver<T> : IObservableSet<T>
     {
         [NotNull]
         private readonly ILink _link;
@@ -17,6 +17,7 @@ namespace Npc
         public event Action<T> Removed;
 
         public HashSet<T> Value { get; } = new HashSet<T>();
+        ICollection<T> IObservableSet<T>.Value => Value;
 
         public SetObserver([NotNull] ILink link)
         {
@@ -38,7 +39,6 @@ namespace Npc
                 _source.CollectionChanged += OnCollectionChanged;
             }
         }
-
         private void OnValueChanged()
         {
             var newSet = new HashSet<T>(_source);
@@ -54,7 +54,6 @@ namespace Npc
                     Added?.Invoke(item);
                 }
         }
-
         private void OnCollectionChanged(object s, NotifyCollectionChangedEventArgs e)
         {
             switch (e.Action)

@@ -71,6 +71,7 @@
   <ItemGroup>
     <Compile Include="DependencyPropertyLinkTest.cs" />
     <Compile Include="SetObserverTest.cs" />
+    <Compile Include="SetSelectorTest.cs" />
     <Compile Include="VisitorTest.cs" />
     <Compile Include="ValueObserverTest.cs" />
     <Compile Include="Samples.cs" />

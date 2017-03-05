@@ -52,6 +52,7 @@ namespace Npc.Tests
             }
 
             public ObservableCollection<int> Collection { get; } = new ObservableCollection<int>();
+            public ObservableCollection<S> Xs { get; } = new ObservableCollection<S>();
             public S(string name, S x)
             {
                 X = x;
