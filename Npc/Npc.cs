@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using static System.Reflection.BindingFlags;
 
 namespace Npc
 {
@@ -43,7 +44,7 @@ namespace Npc
         {
             var value = (T)_source?
                 .GetType()
-                .GetProperty(_propertyName)
+                .GetProperty(_propertyName, Instance | Public | NonPublic)
                 .GetValue(_source);
 
             if (Equals(Value, value))

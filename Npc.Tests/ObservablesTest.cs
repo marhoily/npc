@@ -1,13 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using FluentAssertions;
+using JetBrains.Annotations;
 using Xunit;
 using static Npc.Tests.NpcSamples;
 
 namespace Npc.Tests
 {
-    public sealed class ObservablesTest
+    public sealed class ObservablesTest : INotifyPropertyChanged
     {
         private readonly List<string> _log = new List<string>();
         private readonly S[] _original = Chain(start: 'a', count: 3);
@@ -21,9 +24,13 @@ namespace Npc.Tests
         [Fact]
         public void Subscription_Is_Marked_With_An_Asterisk()
         {
-            var o1 = _original[2].Observe<string>(nameof(S.Name), _log.Add);
+            var o1 = _original[2]
+                .Observe<string>(nameof(S.Name))
+                .WithSubscription(_log.Add);
             _original[2].ToString().Should().Be("c*");
-            var o2 = _original[2].Observe<string>(nameof(S.Name), _log.Add);
+            var o2 = _original[2]
+                .Observe<string>(nameof(S.Name))
+                .WithSubscription(_log.Add);
             _original[2].ToString().Should().Be("c**");
             o1.Dispose();
             _original[2].ToString().Should().Be("c*");
@@ -97,8 +104,9 @@ namespace Npc.Tests
             _original[1].X = _replacement[2];
             _original[0].ToString().Should().Be("abf");
 
-            var observable = _original[0].Track(s => s.X.X);
-            observable.Subscribe(s => _log.Add(s?.ToString() ?? "<null>"));
+            var observable = _original[0]
+                .Track(s => s.X.X)
+                .WithSubscription(s => _log.Add(s?.ToString() ?? "<null>"));
             observable.Value.Name.Should().Be("f");
 
             _original[0].X = _replacement[1];
@@ -117,6 +125,25 @@ namespace Npc.Tests
             _original[0].X = _replacement[1];
             rest.ToString().Should().Be("bc");
         }
+
+        [Fact]
+        public void Should_Work_For_Private_Properties_Too()
+        {
+            this.Track(x => x.Private.Name).Value.Should().Be("x");
+        }
+
+        [Fact]
+        public void Should_Work_When_Some_Parts_Of_Path_Are_Not_Npc()
+        {
+            var observable = this.Track(x => x.Private.Name);
+            observable.Value.Should().Be("x");
+            Private.Name = "changed";
+            observable.Value.Should().Be("changed");
+            Private = _replacement[0];
+            observable.Value.Should().Be("changed");
+            OnPropertyChanged(nameof(Private));
+            observable.Value.Should().Be("d");
+        }
         private static S[] Chain(char start, int count)
         {
             var proto = Enumerable.Range(0, count)
@@ -131,6 +158,15 @@ namespace Npc.Tests
             var result = _log.ToList();
             _log.Clear();
             return result;
+        }
+
+        private S Private { get; set; } = Chain('x', 3)[0];
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        [NotifyPropertyChangedInvocator]
+        private void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }
