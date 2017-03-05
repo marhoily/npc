@@ -24,9 +24,9 @@ namespace Npc.Tests
         [Fact]
         public void Subscription_Is_Marked_With_An_Asterisk()
         {
-            var o1 = _original[2].Track(x => x.Name).WithSubscription(_log.Add);
+            var o1 = _original[2].Track(x => x.Name).WithSubscription((_, v) => _log.Add(v));
             _original[2].ToString().Should().Be("c*");
-            var o2 = _original[2].Track(x => x.Name).WithSubscription(_log.Add);
+            var o2 = _original[2].Track(x => x.Name).WithSubscription((_, v) => _log.Add(v));
             _original[2].ToString().Should().Be("c**");
             o1.Dispose();
             _original[2].ToString().Should().Be("c*");
@@ -82,7 +82,7 @@ namespace Npc.Tests
         public void Should_Notify_Subscribers()
         {
             _original[0].Track(s => s.X.X.X)
-                .WithSubscription(s => _log.Add(s?.ToString() ?? "<null>"));
+                .WithSubscription((_, s) => _log.Add(s?.ToString() ?? "<null>"));
 
             _original[2].X = _replacement[0];
             DrainLog().Should().Equal("def");
@@ -102,7 +102,7 @@ namespace Npc.Tests
 
             var observable = _original[0]
                 .Track(s => s.X.X)
-                .WithSubscription(s => _log.Add(s?.ToString() ?? "<null>"));
+                .WithSubscription((_, s) => _log.Add(s?.ToString() ?? "<null>"));
             observable.Value.Name.Should().Be("f");
 
             _original[0].X = _replacement[1];

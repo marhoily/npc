@@ -19,9 +19,9 @@ namespace Npc
 
         public void Dispose() => _link.Dispose();
         public event PropertyChangedEventHandler PropertyChanged;
-        public ValueObserver<T> WithSubscription(Action<T> handler)
+        public ValueObserver<T> WithSubscription(Action<T, T> handler)
         {
-            _link.Subscribe((_,x) => handler((T)x));
+            _link.Subscribe((a,b) => handler((T)a, (T)b));
             return this;
         }
     }

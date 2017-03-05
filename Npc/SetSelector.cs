@@ -21,23 +21,26 @@ namespace Npc
             // It is important to track all the changes to both TFrom and TTo
             _source = source;
             _selector = selector;
-            _source.Added += item => Added?.Invoke(Add(item).Value);
-            _source.Removed += item => Removed?.Invoke(Remove(item).Value);
+            _source.Added += item => Added?.Invoke(Add(item));
+            _source.Removed += item => Removed?.Invoke(Remove(item));
             foreach (var item in source.Value) Add(item);
         }
 
-        private ValueObserver<TTo> Add(TFrom item)
+        private TTo Add(TFrom item)
         {
             return _map.Add(item, _selector(item)
-                .WithSubscription(changedValue =>
+                .WithSubscription((old, neu) =>
                 {
-                    
-                }));
+                    Removed?.Invoke(old);
+                    Added?.Invoke(neu);
+                })).Value;
         }
-        private ValueObserver<TTo> Remove(TFrom obj)
+        private TTo Remove(TFrom obj)
         {
             var observer = _map.Pop(obj);
-            return observer;
+            var result = observer.Value;
+            observer.Dispose();
+            return result;
         }
 
         public SetSelector<TTo, TFrom> With(Expression<Action<TFrom, TTo>> action)
