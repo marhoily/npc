@@ -25,11 +25,11 @@ namespace Npc.Tests
         public void Subscription_Is_Marked_With_An_Asterisk()
         {
             var o1 = _original[2]
-                .Observe<string>(nameof(S.Name))
+                .Track<string>(nameof(S.Name))
                 .WithSubscription(_log.Add);
             _original[2].ToString().Should().Be("c*");
             var o2 = _original[2]
-                .Observe<string>(nameof(S.Name))
+                .Track<string>(nameof(S.Name))
                 .WithSubscription(_log.Add);
             _original[2].ToString().Should().Be("c**");
             o1.Dispose();
