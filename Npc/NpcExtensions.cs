@@ -21,14 +21,12 @@ namespace Npc
 
         public static IObservable<TResult> Track<TResult>(this INotifyPropertyChanged source, Expression<Func<TResult>> pathExpression)
         {
-            return source.Track<TResult>(pathExpression
-                .ExtractPropertyNames().Skip(count: 1).ToArray());
+            return source.Track<TResult>(pathExpression.ExtractPropertyNames().Skip(count: 1).ToArray());
         }
         public static IObservable<TResult> Track<TSource, TResult>(this TSource source, Expression<Func<TSource, TResult>> pathExpression)
             where TSource : INotifyPropertyChanged
         {
-            return source.Track<TResult>(pathExpression
-                .ExtractPropertyNames().Skip(count: 1).ToArray());
+            return source.Track<TResult>(pathExpression.ExtractPropertyNames().Skip(count: 1).ToArray());
         }
 
         private static IObservable<T> Track<T>(this INotifyPropertyChanged source, params string[] path)

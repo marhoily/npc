@@ -90,6 +90,22 @@ namespace Npc.Tests
             _original[0].X = _replacement[0];
             DrainLog().Should().Equal("f");
         }
+
+        [Fact]
+        public void Notifications_ShouldNotCome_When_MiddleOfTheChain_Changes_DoNot_Change_The_Result()
+        {
+            _original[1].X = _replacement[2];
+            _original[0].ToString().Should().Be("abf");
+
+            var observable = _original[0].Track(s => s.X.X);
+            observable.Subscribe(s => _log.Add(s?.ToString() ?? "<null>"));
+            observable.Value.Name.Should().Be("f");
+
+            _original[0].X = _replacement[1];
+            _original[0].ToString().Should().Be("a*e*f");
+
+            DrainLog().Should().BeEmpty();
+        }
         private static S[] Chain(char start, int count)
         {
             var proto = Enumerable.Range(0, count)
