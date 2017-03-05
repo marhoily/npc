@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Windows;
 
 namespace Npc.Tests
 {
@@ -23,7 +24,7 @@ namespace Npc.Tests
             public S X { get; set; }
             public P Y => this;
         }
-        public sealed class S : INotifyPropertyChanged
+        public sealed class S : DependencyObject, INotifyPropertyChanged
         {
             public string Name
             {
@@ -56,6 +57,14 @@ namespace Npc.Tests
                 Name = name;
             }
 
+            public static readonly DependencyProperty DProperty = DependencyProperty.Register(
+                "D", typeof(S), typeof(S), new PropertyMetadata(default(S)));
+
+            public S D
+            {
+                get { return (S) GetValue(DProperty); }
+                set { SetValue(DProperty, value); }
+            }
             public override string ToString()
             {
                 return Name + new string(c: '*', count: _handlersList.Count) + X;
