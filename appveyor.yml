@@ -17,7 +17,7 @@ cache:
   - packages -> **\packages.config
 
 after_test:
-  - nuget pack src\Npc\Npc.nuspec -Version "%APPVEYOR_BUILD_VERSION%"
+  - nuget pack Npc\Npc.nuspec -Version "%APPVEYOR_BUILD_VERSION%"
   
 artifacts:
   - path: '*.nupkg'
