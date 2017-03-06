@@ -12,6 +12,7 @@ namespace Npc
             = new SelectorMap<TFrom, ValueObserver<TTo>, TTo>(c => c.Value);
 
         public ICollection<TTo> Value => _map.CoreCollection;
+        public Dictionary<TFrom, TTo> Map => _map.CollectionSource;
         public event Action<TTo> Added;
         public event Action<TTo> Removed;
 

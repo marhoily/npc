@@ -7,9 +7,9 @@ namespace Npc
     {
         private readonly Func<TValue, TValueCore> _core;
         private readonly Dictionary<TKey, TValue> _map = new Dictionary<TKey, TValue>();
-        private readonly Dictionary<TKey, TValueCore> _collectionSource = new Dictionary<TKey, TValueCore>();
-        public ICollection<TValueCore> CoreCollection => _collectionSource.Values;
-        public ICollection<TKey> Keys => _collectionSource.Keys;
+        public Dictionary<TKey, TValueCore> CollectionSource { get; } = new Dictionary<TKey, TValueCore>();
+        public ICollection<TValueCore> CoreCollection => CollectionSource.Values;
+        public ICollection<TKey> Keys => CollectionSource.Keys;
 
         public SelectorMap(Func<TValue, TValueCore> core)
         {
@@ -20,13 +20,13 @@ namespace Npc
         {
             var result = _map[key];
             _map.Remove(key);
-            _collectionSource.Remove(key);
+            CollectionSource.Remove(key);
             return result;
         }
         public TValue Add(TKey key, TValue value)
         {
             _map.Add(key, value);
-            _collectionSource.Add(key, _core(value));
+            CollectionSource.Add(key, _core(value));
             return value;
         }
 

@@ -22,5 +22,10 @@ namespace Npc
         {
             return new SetSynchronizer<T>(source, destination);
         }
+        public static void DisposeWithSource<T>(this SetSynchronizer<T> source)
+        {
+            source.Dispose();
+            source.Source.Dispose();
+        }
     }
 }
