@@ -67,6 +67,7 @@
     <Compile Include="SetObserver.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Npc.nuspec" />
     <None Include="packages.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -1,0 +1,20 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2010/07/nuspec.xsd">
+  <metadata>
+    <id>Npc</id>
+    <version>$version$</version>
+    <authors>Ilya Margolin</authors>
+    <projectUrl>https://github.com/marhoily/npc</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <summary>Set of utilities that help to track INotifyPropertyChange, 
+      DependencyProperty, ObservableCollection, etc.</summary>
+    <description>Helps to write expressions like: 
+        myViewModel.Track(vm => vm.A.B.C.Name) and be sure
+        to get notified whenewer vm.A, or A.B, or C.Name changed.</description>
+    <tags>WPF MVVM reactive track observe change INotifyPropertyChange DependencyProperty ObservableCollection</tags>
+  </metadata>
+  <files>
+    <file src="bin\Release\Npc.dll" target="lib\net452\Npc.dll" />
+    <!--<file src="bin\Release\Npc.XML" target="lib\net452\Npc.XML" />-->
+  </files>
+</package>
