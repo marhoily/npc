@@ -11,6 +11,16 @@ namespace Npc.Tests
         private readonly Samples.S[] _replacement = Samples.Chain(start: 'd', count: 3);
 
         [Fact]
+        public void Track_Null()
+        {
+            var observer = _original[2].TrackSet(s => s.X.Collection);
+            observer.Value.Should().BeEmpty();
+            _replacement[0].Collection.Add(34);
+            _original[2].X = _replacement[0];
+            observer.Value.Should().Equal(34);
+        }
+
+        [Fact]
         public void Track_Should_Observe_Correct_Value()
         {
             _original[2].Collection.Add(63);

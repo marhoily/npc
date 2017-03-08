@@ -22,7 +22,7 @@ namespace Npc
         public SetObserver([NotNull] ILink link)
         {
             _link = link;
-            _link.Subscribe((_,value) => OnSourceChanged((ObservableCollection<T>)value));
+            _link.Subscribe((_, value) => OnSourceChanged((ObservableCollection<T>)value));
             OnSourceChanged((ObservableCollection<T>)link.Value);
         }
 
@@ -41,18 +41,19 @@ namespace Npc
         }
         private void OnValueChanged()
         {
-            var newSet = new HashSet<T>(_source);
+            var newSet = new HashSet<T>(_source ?? Enumerable.Empty<T>());
             foreach (var item in Value.ToList())
                 if (!newSet.Contains(item))
                 {
                     Value.Remove(item);
                     Removed?.Invoke(item);
                 }
-            foreach (var item in _source)
-                if (Value.Add(item))
-                {
-                    Added?.Invoke(item);
-                }
+            if (_source != null)
+                foreach (var item in _source)
+                    if (Value.Add(item))
+                    {
+                        Added?.Invoke(item);
+                    }
         }
         private void OnCollectionChanged(object s, NotifyCollectionChangedEventArgs e)
         {
